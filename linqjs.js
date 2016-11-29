@@ -1,5 +1,7 @@
 (function () {
 
+    'use strict';
+
     // Default methods
 
     function DefaultEqualityComparer(a, b) {
@@ -22,9 +24,20 @@
         return t;
     };
 
+    var myprop = new Array();
+
     // Selectors
 
-    Array.prototype.select = Array.prototype.map || function (selector, context) {
+    Object.prototype.select = function (selector, context) {
+        context = context || window;
+        var arr = [];
+        var l = this.length;
+        for (var i = 0; i < l; i++)
+            arr.push(selector.call(context, this[i], i, this));
+        return arr;
+    };
+
+    myprop.prototype.select = Array.prototype.map || function (selector, context) {
         context = context || window;
         var arr = [];
         var l = this.length;
