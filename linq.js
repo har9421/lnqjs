@@ -367,6 +367,7 @@
         return this.length == 0 ? [val == null ? null : val] : this;
     };
 
+
     Array.range = function (start, count) {
         var arr = [];
         while (count-- > 0) {
@@ -374,5 +375,16 @@
         }
         return arr;
     };
+
+    // added by harshad 
+    Array.prototype.unique = function (selector, context) {
+            context = context || window;
+            var arr = [];
+            var l = this.length;
+            for (var i = 0; i < l; i++)
+                arr.push(selector.call(context, this[i], i, this));
+            return arr;
+        };
+
 
 })();
