@@ -374,7 +374,7 @@
             callback.call(context, this[i], i, this);
     };
 
-    Array.prototype.defaultIfEmpty = function (val) {
+    lq.defaultIfEmpty = function (val) {
         return this.length == 0 ? [val == null ? null : val] : this;
     };
 
@@ -388,29 +388,28 @@
     };
 
     // added by harshad 
-    Array.prototype.unique = function (selector, context) {             
+    lq.unique = function (obj,selector, context) {             
             var arr = [];
-            var length = this.length;
+            if(isArrayLike(obj)){
 
-            for(var i = 0;i < length; i++){
-                var currentValue =  selector(this[i]);
-                var isPresent = false;
-                for(var j = 0 ; j< arr.length; j++){
-                    if(currentValue === arr[j]){
-                        isPresent = true;
-                        break;
+                var length = this.length;
+
+                for(var i = 0;i < length; i++){
+                    var currentValue =  selector(this[i]);
+                    var isPresent = false;
+                    for(var j = 0 ; j< arr.length; j++){
+                        if(currentValue === arr[j]){
+                            isPresent = true;
+                            break;
+                        }
                     }
+                    if(!isPresent) 
+                        arr.push(this[i]); 
                 }
-                if(!isPresent) 
-                    arr.push(this[i]); 
             }
             return arr;
+            
         };
-
-
-
-
-
 
 
 })();
