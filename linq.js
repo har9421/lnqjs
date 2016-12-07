@@ -27,13 +27,6 @@
 
     // Selectors
 
-    Object.prototype.select = function (selector, context) {
-        context = context || window;
-        var obj = {};
-        var l = this.length;
-        return selector.call(context, this[i], i, this);
-    };
-
     Array.prototype.select = Array.prototype.map || function (selector, context) {
         context = context || window;
         var arr = [];
@@ -374,14 +367,29 @@
     };
 
     // added by harshad 
-    Array.prototype.unique = function (selector, context) {
-            context = context || window;
+    Array.prototype.unique = function (selector, context) {             
             var arr = [];
-            var l = this.length;
-            for (var i = 0; i < l; i++)
-                arr.push(selector.call(context, this[i], i, this));
+            var length = this.length;
+
+            for(var i = 0;i < length; i++){
+                var currentValue =  selector(this[i]);
+                var isPresent = false;
+                for(var j = 0 ; j< arr.length; j++){
+                    if(currentValue === arr[j]){
+                        isPresent = true;
+                        break;
+                    }
+                }
+                if(!isPresent) 
+                    arr.push(this[i]); 
+            }
             return arr;
         };
+
+
+
+
+
 
 
 })();
