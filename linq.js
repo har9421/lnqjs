@@ -24,10 +24,31 @@
         return t;
     };
 
+    
+    var lq = function(obj) {
+        if (obj instanceof lq) return obj;
+        if (!(this instanceof lq)) return new lq(obj);
+        this._wrapped = obj;
+    };
+
+    var shallowProperty = function(key) {
+        return function(obj) {
+        return obj == null ? void 0 : obj[key];
+        };
+    };
+
+    var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
+    var getLength = shallowProperty('length');
+
+    var isArrayLike = function(collection) {
+        var length = getLength(collection);
+        return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
+    };
+
 
     // Selectors
 
-    Array.prototype.select = Array.prototype.map || function (selector, context) {
+    lq.select = lq.map || function (selector, context) {
         context = context || window;
         var arr = [];
         var l = this.length;
@@ -36,20 +57,20 @@
         return arr;
     };
 
-    Array.prototype.selectMany = function (selector, resSelector) {
+    lq.selectMany = function (selector, resSelector) {
         resSelector = resSelector || function (i, res) { return res; };
         return this.aggregate(function (a, b) {
             return a.concat(selector(b).select(function (res) { return resSelector(b, res) }));
         }, []);
     };
 
-    Array.prototype.take = function (c) {
+    lq.take = function (c) {
         return this.slice(0, c);
     };
 
-    Array.prototype.skip = Array.prototype.slice;
+    lq.skip = Array.prototype.slice;
 
-    Array.prototype.first = function (predicate, def) {
+    ls.first = function (predicate, def) {
         var l = this.length;
         if (!predicate) return l ? this[0] : def == null ? null : def;
         for (var i = 0; i < l; i++)
@@ -59,7 +80,7 @@
         return def == null ? null : def;
     };
 
-    Array.prototype.last = function (predicate, def) {
+    ls.last = function (predicate, def) {
         var l = this.length;
         if (!predicate) return l ? this[l - 1] : def == null ? null : def;
         while (l-- > 0)
@@ -69,18 +90,18 @@
         return def == null ? null : def;
     };
 
-    Array.prototype.union = function (arr) {
+    ls.union = function (arr) {
         return this.concat(arr).distinct();
     };
 
-    Array.prototype.intersect = function (arr, comparer) {
+    ls.intersect = function (arr, comparer) {
         comparer = comparer || DefaultEqualityComparer;
         return this.distinct(comparer).where(function (t) {
             return arr.contains(t, comparer);
         });
     };
 
-    Array.prototype.except = function (arr, comparer) {
+    ls.except = function (arr, comparer) {
         if (!(arr instanceof Array)) arr = [arr];
         comparer = comparer || DefaultEqualityComparer;
         var l = this.length;
@@ -99,7 +120,7 @@
         return res;
     };
 
-    Array.prototype.distinct = function (comparer) {
+    ls.distinct = function (comparer) {
         var arr = [];
         var l = this.length;
         for (var i = 0; i < l; i++) {
@@ -109,7 +130,7 @@
         return arr;
     };
 
-    Array.prototype.zip = function (arr, selector) {
+    ls.zip = function (arr, selector) {
         return this
             .take(Math.min(this.length, arr.length))
             .select(function (t, i) {
@@ -117,27 +138,27 @@
             });
     };
 
-    Array.prototype.indexOf = Array.prototype.indexOf || function (o, index) {
+    ls.indexOf = Array.prototype.indexOf || function (o, index) {
         var l = this.length;
         for (var i = Math.max(Math.min(index, l), 0) || 0; i < l; i++)
             if (this[i] === o) return i;
         return -1;
     };
 
-    Array.prototype.lastIndexOf = Array.prototype.lastIndexOf || function (o, index) {
+    lq.lastIndexOf = Array.prototype.lastIndexOf || function (o, index) {
         var l = Math.max(Math.min(index || this.length, this.length), 0);
         while (l-- > 0)
             if (this[l] === o) return l;
         return -1;
     };
 
-    Array.prototype.remove = function (item) {
+    lq.remove = function (item) {
         var i = this.indexOf(item);
         if (i != -1)
             this.splice(i, 1);
     };
 
-    Array.prototype.removeAll = function (predicate) {
+    lq.removeAll = function (predicate) {
         var item;
         var i = 0;
         while ((item = this.first(predicate)) != null) {
@@ -148,7 +169,7 @@
         return i;
     };
 
-    Array.prototype.orderBy = function (selector, comparer) {
+    lq.orderBy = function (selector, comparer) {
         comparer = comparer || DefaultSortComparer;
         var arr = this.slice(0);
         var fn = function (a, b) {
@@ -174,12 +195,12 @@
         return arr.sort(fn);
     };
 
-    Array.prototype.orderByDescending = function (selector, comparer) {
+    lq.orderByDescending = function (selector, comparer) {
         comparer = comparer || DefaultSortComparer;
         return this.orderBy(selector, function (a, b) { return -comparer(a, b) });
     };
 
-    Array.prototype.innerJoin = function (arr, outer, inner, result, comparer) {
+    lq.innerJoin = function (arr, outer, inner, result, comparer) {
         comparer = comparer || DefaultEqualityComparer;
         var res = [];
 
@@ -195,7 +216,7 @@
         return res;
     };
 
-    Array.prototype.groupJoin = function (arr, outer, inner, result, comparer) {
+    lq.groupJoin = function (arr, outer, inner, result, comparer) {
         comparer = comparer || DefaultEqualityComparer;
         return this
             .select(function (t) {
@@ -212,7 +233,7 @@
             });
     };
 
-    Array.prototype.groupBy = function (selector, comparer) {
+    lq.groupBy = function (selector, comparer) {
         var grp = [];
         var l = this.length;
         comparer = comparer || DefaultEqualityComparer;
@@ -233,7 +254,7 @@
         return grp;
     };
 
-    Array.prototype.toDictionary = function (keySelector, valueSelector) {
+    lq.toDictionary = function (keySelector, valueSelector) {
         var o = {};
         var l = this.length;
         while (l-- > 0) {
@@ -247,7 +268,7 @@
 
     // Aggregates
 
-    Array.prototype.aggregate = Array.prototype.reduce || function (func, seed) {
+    lq.aggregate = Array.prototype.reduce || function (func, seed) {
         var arr = this.slice(0);
         var l = this.length;
         if (seed == null) seed = arr.shift();
@@ -258,7 +279,7 @@
         return seed;
     };
 
-    Array.prototype.min = function (s) {
+    lq.min = function (s) {
         s = s || DefaultSelector;
         var l = this.length;
         var min = s(this[0]);
@@ -267,7 +288,7 @@
         return min;
     };
 
-    Array.prototype.max = function (s) {
+    lq.max = function (s) {
         s = s || DefaultSelector;
         var l = this.length;
         var max = s(this[0]);
@@ -276,7 +297,7 @@
         return max;
     };
 
-    Array.prototype.sum = function (s) {
+    lq.sum = function (s) {
         s = s || DefaultSelector;
         var l = this.length;
         var sum = 0;
@@ -286,7 +307,7 @@
 
     // Predicates
 
-    Array.prototype.where = Array.prototype.filter || function (predicate, context) {
+    lq.where = Array.prototype.filter || function (predicate, context) {
         context = context || window;
         var arr = [];
         var l = this.length;
@@ -295,7 +316,7 @@
         return arr;
     };
 
-    Array.prototype.any = function (predicate, context) {
+    lq.any = function (predicate, context) {
         context = context || window;
         var f = this.some || function (p, c) {
             var l = this.length;
@@ -307,7 +328,7 @@
         return f.apply(this, [predicate, context]);
     };
 
-    Array.prototype.all = function (predicate, context) {
+    lq.all = function (predicate, context) {
         context = context || window;
         predicate = predicate || DefaultPredicate;
         var f = this.every || function (p, c) {
@@ -316,7 +337,7 @@
         return f.apply(this, [predicate, context]);
     };
 
-    Array.prototype.takeWhile = function (predicate) {
+    lq.takeWhile = function (predicate) {
         predicate = predicate || DefaultPredicate;
         var l = this.length;
         var arr = [];
@@ -326,7 +347,7 @@
         return arr;
     };
 
-    Array.prototype.skipWhile = function (predicate) {
+    lq.skipWhile = function (predicate) {
         predicate = predicate || DefaultPredicate;
         var l = this.length;
         var i = 0;
@@ -336,7 +357,7 @@
         return this.skip(i);
     };
 
-    Array.prototype.contains = function (o, comparer) {
+    lq.contains = function (o, comparer) {
         comparer = comparer || DefaultEqualityComparer;
         var l = this.length;
         while (l-- > 0)
@@ -346,7 +367,7 @@
 
     // Iterations
 
-    Array.prototype.forEach = Array.prototype.forEach || function (callback, context) {
+    lq.forEach = Array.prototype.forEach || function (callback, context) {
         context = context || window;
         var l = this.length;
         for (var i = 0; i < l; i++)
