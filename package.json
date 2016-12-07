@@ -1,0 +1,27 @@
+{
+  "name": "linqjs",
+  "version": "1.0.0",
+  "description": "linq for js",
+  "main": "linqjs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/har9421/linqjs.git"
+  },
+  "keywords": [
+    "linq",
+    "js",
+    "language",
+    "integrated",
+    "query"
+  ],
+  "author": "Harshad Karemore",
+  "license": "ISC", 
+  "bugs": {
+    "url": "https://github.com/har9421/linqjs/issues"
+  },
+  "homepage": "https://github.com/har9421/linqjs#readme"
+}
+  

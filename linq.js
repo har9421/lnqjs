@@ -24,20 +24,17 @@
         return t;
     };
 
-    var myprop = new Array();
 
     // Selectors
 
     Object.prototype.select = function (selector, context) {
         context = context || window;
-        var arr = [];
+        var obj = {};
         var l = this.length;
-        for (var i = 0; i < l; i++)
-            arr.push(selector.call(context, this[i], i, this));
-        return arr;
+        return selector.call(context, this[i], i, this);
     };
 
-    myprop.prototype.select = Array.prototype.map || function (selector, context) {
+    Array.prototype.select = Array.prototype.map || function (selector, context) {
         context = context || window;
         var arr = [];
         var l = this.length;
