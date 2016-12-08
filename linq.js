@@ -1,3 +1,5 @@
+//  linq.js 1.0.0
+
 (function () {
 
     'use strict';
@@ -23,13 +25,16 @@
     function DefaultSelector(t) {
         return t;
     };
-
-    
+  
     var lq = function(obj) {
         if (obj instanceof lq) return obj;
         if (!(this instanceof lq)) return new lq(obj);
         this._wrapped = obj;
     };
+
+    var linq = function(){
+
+    }
 
     var shallowProperty = function(key) {
         return function(obj) {
@@ -40,7 +45,7 @@
     var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
     var getLength = shallowProperty('length');
 
-    var isArrayLike = function(collection) {
+    var isArray = function(collection) {
         var length = getLength(collection);
         return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
     };
@@ -70,7 +75,7 @@
 
     lq.skip = Array.prototype.slice;
 
-    ls.first = function (predicate, def) {
+    lq.first = function (predicate, def) {
         var l = this.length;
         if (!predicate) return l ? this[0] : def == null ? null : def;
         for (var i = 0; i < l; i++)
@@ -80,7 +85,7 @@
         return def == null ? null : def;
     };
 
-    ls.last = function (predicate, def) {
+    lq.last = function (predicate, def) {
         var l = this.length;
         if (!predicate) return l ? this[l - 1] : def == null ? null : def;
         while (l-- > 0)
@@ -90,18 +95,18 @@
         return def == null ? null : def;
     };
 
-    ls.union = function (arr) {
+    lq.union = function (arr) {
         return this.concat(arr).distinct();
     };
 
-    ls.intersect = function (arr, comparer) {
+    lq.intersect = function (arr, comparer) {
         comparer = comparer || DefaultEqualityComparer;
         return this.distinct(comparer).where(function (t) {
             return arr.contains(t, comparer);
         });
     };
 
-    ls.except = function (arr, comparer) {
+    lq.except = function (arr, comparer) {
         if (!(arr instanceof Array)) arr = [arr];
         comparer = comparer || DefaultEqualityComparer;
         var l = this.length;
@@ -120,7 +125,7 @@
         return res;
     };
 
-    ls.distinct = function (comparer) {
+    lq.distinct = function (comparer) {
         var arr = [];
         var l = this.length;
         for (var i = 0; i < l; i++) {
@@ -130,7 +135,7 @@
         return arr;
     };
 
-    ls.zip = function (arr, selector) {
+    lq.zip = function (arr, selector) {
         return this
             .take(Math.min(this.length, arr.length))
             .select(function (t, i) {
@@ -138,7 +143,7 @@
             });
     };
 
-    ls.indexOf = Array.prototype.indexOf || function (o, index) {
+    lq.indexOf = Array.prototype.indexOf || function (o, index) {
         var l = this.length;
         for (var i = Math.max(Math.min(index, l), 0) || 0; i < l; i++)
             if (this[i] === o) return i;
@@ -390,7 +395,7 @@
     // added by harshad 
     lq.unique = function (obj,selector, context) {             
             var arr = [];
-            if(isArrayLike(obj)){
+            if(isArray(obj)){
 
                 var length = this.length;
 
@@ -411,5 +416,10 @@
             
         };
 
+        // if (typeof define == 'function' && define.amd) {
+        //     define('linq', [], function() {
+        //        return lq;
+        //     });
+        // }
 
 })();
