@@ -4,6 +4,28 @@
 
     'use strict';
 
+    var root = typeof self == 'object' && self.self === self && self ||
+            typeof global == 'object' && global.global === global && global ||
+            this;
+
+
+    var previousUnderscore = root.lq;
+
+    var lq = function (obj) {
+        if (obj instanceof lq) return obj;
+        if (!(this instanceof lq)) return new lq(obj);
+        this._wrapped = obj;
+    };
+
+    if (typeof exports != 'undefined' && !exports.nodeType) {
+        if (typeof module != 'undefined' && !module.nodeType && module.exports) {
+            exports = module.exports = lq;
+        }
+        exports.lq = lq;
+    } else {
+        root.lq = lq;
+    }
+
     // Default methods
 
     function DefaultEqualityComparer(a, b) {
@@ -25,39 +47,30 @@
     function DefaultSelector(t) {
         return t;
     };
-  
-    var lq = function(obj) {
-        if (obj instanceof lq) return obj;
-        if (!(this instanceof lq)) return new lq(obj);
-        this._wrapped = obj;
-    };
 
-    var linq = function(){
 
-    }
-
-    var _shallowProperty = function(key) {
-        return function(obj) {
-        return obj == null ? void 0 : obj[key];
+    var _shallowProperty = function (key) {
+        return function (obj) {
+            return obj == null ? void 0 : obj[key];
         };
     };
 
     var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
     var _getLength = _shallowProperty('length');
 
-    var _isArray = function(collection) {
+    var _isArray = function (collection) {
         var length = _getLength(collection);
         return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
     };
 
     // has key in obj
-    var _keyInObj = function(obj, key) {
+    var _keyInObj = function (obj, key) {
         return key in obj;
     };
 
     // has value in obj
-    var _valueInObj = function(obj, key, value) {
-        return _keyInObj(obj,key) && obj[key] === value;
+    var _valueInObj = function (obj, key, value) {
+        return _keyInObj(obj, key) && obj[key] === value;
     }
 
 
@@ -403,33 +416,33 @@
     };
 
     // added by harshad 
-    lq.unique = function (obj,selector, context) {             
-            var arr = [];
-            if(_isArray(obj)){
+    lq.unique = function (obj, selector, context) {
+        var arr = [];
+        if (_isArray(obj)) {
 
-                var length = this.length;
+            var length = obj.length;
 
-                for(var i = 0;i < length; i++){
-                    var currentValue =  selector(this[i]);
-                    var isPresent = false;
-                    for(var j = 0 ; j< arr.length; j++){
-                        if(currentValue === arr[j]){
-                            isPresent = true;
-                            break;
-                        }
+            for (var i = 0; i < length; i++) {
+                var currentValue = selector(obj[i]);
+                var isPresent = false;
+                for (var j = 0 ; j < arr.length; j++) {
+                    if (currentValue === arr[j]) {
+                        isPresent = true;
+                        break;
                     }
-                    if(!isPresent) 
-                        arr.push(this[i]); 
                 }
+                if (!isPresent)
+                    arr.push(obj[i]);
             }
-            return arr;
-            
-        };
+        }
+        return arr;
 
-        // if (typeof define == 'function' && define.amd) {
-        //     define('linq', [], function() {
-        //        return lq;
-        //     });
-        // }
+    };
+
+    if (typeof define == 'function' && define.amd) {
+        define('linq', [], function () {
+            return lq;
+        });
+    }
 
 })();
