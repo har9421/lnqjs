@@ -56,6 +56,7 @@
     };
 
     var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
+    
     var _getLength = _shallowProperty('length');
 
     var _isArray = function (collection) {
