@@ -36,19 +36,29 @@
 
     }
 
-    var shallowProperty = function(key) {
+    var _shallowProperty = function(key) {
         return function(obj) {
         return obj == null ? void 0 : obj[key];
         };
     };
 
     var MAX_ARRAY_INDEX = Math.pow(2, 53) - 1;
-    var getLength = shallowProperty('length');
+    var _getLength = _shallowProperty('length');
 
-    var isArray = function(collection) {
-        var length = getLength(collection);
+    var _isArray = function(collection) {
+        var length = _getLength(collection);
         return typeof length == 'number' && length >= 0 && length <= MAX_ARRAY_INDEX;
     };
+
+    // has key in obj
+    var _keyInObj = function(obj, key) {
+        return key in obj;
+    };
+
+    // has value in obj
+    var _valueInObj = function(obj, key, value) {
+        return _keyInObj(obj,key) && obj[key] === value;
+    }
 
 
     // Selectors
@@ -395,7 +405,7 @@
     // added by harshad 
     lq.unique = function (obj,selector, context) {             
             var arr = [];
-            if(isArray(obj)){
+            if(_isArray(obj)){
 
                 var length = this.length;
 
