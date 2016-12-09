@@ -18,10 +18,13 @@
     "query"
   ],
   "author": "Harshad Karemore",
-  "license": "ISC", 
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/har9421/linqjs/issues"
   },
-  "homepage": "https://github.com/har9421/linqjs#readme"
+  "homepage": "https://github.com/har9421/linqjs#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "requirejs": "^2.3.2"
+  }
 }
-  
