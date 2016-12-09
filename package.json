@@ -18,13 +18,16 @@
     "query"
   ],
   "author": "Harshad Karemore",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/har9421/linqjs/issues"
   },
   "homepage": "https://github.com/har9421/linqjs#readme",
   "devDependencies": {
     "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-uglify": "^2.0.0",
+    "grunt-serve": "^0.1.6",
     "requirejs": "^2.3.2"
   }
 }
