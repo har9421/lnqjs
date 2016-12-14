@@ -415,6 +415,18 @@
         return arr;
     };
 
+    lq.range = function (obj, start, count) {
+         if (_isArray(obj)) {
+            var arr = [];
+            while (count-- > 0) {
+                arr.push(start++);
+            }
+            return arr;
+         } else
+             return obj;
+    };
+
+
     // added by harshad 
     lq.unique = function (obj, selector, context) {
         var arr = [];
