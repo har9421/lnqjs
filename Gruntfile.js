@@ -28,11 +28,29 @@ module.exports = function (grunt) {
         singleRun: true
       }
     },
-     serve:{
-       options : {
-           port: 9000
-       }
-     }
+    watch: {
+      scripts: {
+         files: ['*.js'],
+         options : {
+           spawn : false,
+           livereload: true
+         }
+      },
+    },
+    connect : {
+      server : {
+            options : {
+              hostname : 'localhost',
+              port : 9000,
+              livereload : true
+            }
+      }
+    }//,
+    //  serve:{
+    //    options : {
+    //        port: 9000
+    //    }
+    //  }
 
   });
 
@@ -42,9 +60,13 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-karma');
 
-  grunt.loadNpmTasks('grunt-serve');
+  //grunt.loadNpmTasks('grunt-serve');
+
+  grunt.loadNpmTasks('grunt-contrib-connect');
+
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   
-  grunt.registerTask('default', ['uglify','karma','serve']);
+  grunt.registerTask('default', ['uglify','karma','connect','watch']);
     
 };
