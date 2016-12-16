@@ -5,6 +5,7 @@ node_modules
 *.swp
 nyc_output
 coverage
+linq.min.js
 
 # Windows image file caches
 Thumbs.db
