@@ -439,8 +439,6 @@
              return obj;
     };
 
-
-   
     lq.unique = function (obj, selector, context) {
         var arr = [];
         if (_isArray(obj)) {
