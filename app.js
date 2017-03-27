@@ -5,6 +5,6 @@ require.config({
     }
 });
 
-require(['lq','modules/selector','modules/predicate','modules/iteration','modules/  aggregate']);
+require(['lq','modules/selector','modules/predicate','modules/iteration','modules/aggregate']);
 
 
