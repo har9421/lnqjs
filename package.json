@@ -1,6 +1,6 @@
 {
   "name": "lnqjs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "linq for js",
   "main": "lib/index.js",
   "scripts": {
