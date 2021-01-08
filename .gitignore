@@ -6,6 +6,8 @@ node_modules
 nyc_output
 coverage
 linq.min.js
+package-lock.json
+yarn.lock
 
 # Windows image file caches
 Thumbs.db
@@ -54,4 +56,3 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
-
